@@ -22,12 +22,12 @@ export default {
         }
     },
     created() {
-        db.collection('users').get().then(querySnapshot => [
+        db.collection('Users').get().then(querySnapshot => [
             querySnapshot.forEach(doc => {
                 const data = {
                     'Id': doc.id,
-                    'UserId': doc.data().Id,
-                    'UserName': doc.data().Name
+                    'UserId': doc.data().id,
+                    'UserName': doc.data().name
                 }
                 console.log(data);
                 this.users.push(data);
