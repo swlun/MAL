@@ -22,8 +22,8 @@ export default {
         }
     },
     created() {
-        db.collection('Users').get().then(querySnapshot => [
-            querySnapshot.forEach(doc => {
+        db.collection('Users').get().then(snapshot => [
+            snapshot.forEach(doc => {
                 const data = {
                     'Id': doc.id,
                     'UserId': doc.data().id,

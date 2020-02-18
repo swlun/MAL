@@ -11,16 +11,17 @@
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld';
 import NavBar from './components/NavBar'
 import ToolBar from './components/ToolBar'
 
 export default {
   name: 'App',
   components: {
-    // HelloWorld,
     NavBar,
     ToolBar
+  },
+  created() {
+    this.$store.dispatch('GetAllUsers');
   }
 }
 </script>

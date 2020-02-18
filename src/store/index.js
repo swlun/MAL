@@ -25,8 +25,47 @@ const modulePageState = {
   }
 }
 
+import db from '../scripts/firebaseInit';
+const moduleMyUsers = {
+  state: {
+    users: []
+  },
+  mutations: {
+    GetAllUsers(state) {
+      db.collection('Users').get().then(snapshot => [
+        snapshot.forEach(doc => {
+            const data = {
+                'id': doc.id,
+                'userId': doc.data().id,
+                'name': doc.data().name,
+                'age': doc.data().age,
+                'contactNumber': doc.data().contactNumber,
+                'location': doc.data().location,
+                'occupation': doc.data().occupation,
+                'student': doc.data().student,
+                'teacher': doc.data().teacher,
+                'description': doc.data().description,  
+            }
+            state.users.push(data);
+        })
+      ])
+    }
+  },
+  actions: {
+    GetAllUsers(context) {
+      context.commit('GetAllUsers');
+    }
+  },
+  getters: {
+    GetAllUsers(state) {
+      return state.users;
+    }
+  }
+}
+
 export default new Vuex.Store({
   modules: {
-    PageState: modulePageState
+    PageState: modulePageState,
+    Users: moduleMyUsers
   }
 })
