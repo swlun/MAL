@@ -32,6 +32,7 @@ const moduleMyUsers = {
   },
   mutations: {
     GetAllUsers(state) {
+      let tempUsers = [];
       db.collection('Users').get().then(snapshot => [
         snapshot.forEach(doc => {
             const data = {
@@ -46,9 +47,10 @@ const moduleMyUsers = {
                 'teacher': doc.data().teacher,
                 'description': doc.data().description,  
             }
-            state.users.push(data);
+            tempUsers.push(data);
         })
       ])
+      state.users = tempUsers;
     }
   },
   actions: {

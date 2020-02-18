@@ -26,20 +26,26 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
+                  <v-col cols="12" sm="6" md="6">
+                    <v-text-field v-model="editedItem.name" label="Name"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="6">
+                    <v-text-field v-model="editedItem.age" type="number" label="Age"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="6">
+                    <v-text-field v-model="editedItem.contactNumber" label="Contact Number"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="6">
+                    <v-text-field v-model="editedItem.occupation" label="Occupation"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="12" md="12">
+                    <v-text-field v-model="editedItem.location" label="Location"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
+                    <v-checkbox v-model="editedItem.student" label="Student"></v-checkbox>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.carbs" label="Carbs (g)"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
+                    <v-checkbox v-model="editedItem.teacher" label="Teacher"></v-checkbox>
                   </v-col>
                 </v-row>
               </v-container>
@@ -76,6 +82,7 @@
 </template>
 
 <script>
+import db from '../scripts/firebaseInit';
 export default {
     data: () => ({
         dialog: false,
@@ -85,7 +92,7 @@ export default {
             text: 'Id',
             align: 'left',
             sortable: true,
-            value: 'userId',
+            value: 'id',
         },
         { text: 'Name', value: 'name' },
         { text: 'Age', value: 'age' },
@@ -96,7 +103,6 @@ export default {
         { text: 'Teacher', value: 'teacher' },
         { text: 'Actions', value: 'action', sortable: false },
         ],
-        desserts: [],
         editedIndex: -1,
         editedItem: {
             name: '',
@@ -106,6 +112,7 @@ export default {
             occupation: '',
             student: false,
             teacher: false,
+            description: ''
         },
         defaultItem: {
             name: '',
@@ -131,84 +138,12 @@ export default {
     },
 
     created () {
-        this.users = this.$store.getters.GetAllUsers;
         this.initialize();
     },
 
     methods: {
         initialize () {
-        this.desserts = [
-            {
-            name: 'Frozen Yogurt',
-            calories: 159,
-            fat: 6.0,
-            carbs: 24,
-            protein: 4.0,
-            },
-            {
-            name: 'Ice cream sandwich',
-            calories: 237,
-            fat: 9.0,
-            carbs: 37,
-            protein: 4.3,
-            },
-            {
-            name: 'Eclair',
-            calories: 262,
-            fat: 16.0,
-            carbs: 23,
-            protein: 6.0,
-            },
-            {
-            name: 'Cupcake',
-            calories: 305,
-            fat: 3.7,
-            carbs: 67,
-            protein: 4.3,
-            },
-            {
-            name: 'Gingerbread',
-            calories: 356,
-            fat: 16.0,
-            carbs: 49,
-            protein: 3.9,
-            },
-            {
-            name: 'Jelly bean',
-            calories: 375,
-            fat: 0.0,
-            carbs: 94,
-            protein: 0.0,
-            },
-            {
-            name: 'Lollipop',
-            calories: 392,
-            fat: 0.2,
-            carbs: 98,
-            protein: 0,
-            },
-            {
-            name: 'Honeycomb',
-            calories: 408,
-            fat: 3.2,
-            carbs: 87,
-            protein: 6.5,
-            },
-            {
-            name: 'Donut',
-            calories: 452,
-            fat: 25.0,
-            carbs: 51,
-            protein: 4.9,
-            },
-            {
-            name: 'KitKat',
-            calories: 518,
-            fat: 26.0,
-            carbs: 65,
-            protein: 7,
-            },
-        ]
+            this.users = this.$store.getters.GetAllUsers;
         },
 
         editItem (item) {
@@ -234,7 +169,12 @@ export default {
         if (this.editedIndex > -1) {
             Object.assign(this.desserts[this.editedIndex], this.editedItem)
         } else {
-            this.desserts.push(this.editedItem)
+            db.collection('Users').add(this.editedItem)
+            .then(() => {
+                this.$store.dispatch('GetAllUsers')
+                console.log(this.users);
+                console.log(this.$store.getters.GetAllUsers);
+            })
         }
         this.close()
         },
