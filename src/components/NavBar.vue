@@ -15,7 +15,7 @@
             <v-divider></v-divider>
 
             <v-list dense nav>
-                <v-list-item v-for="item in items" :key="item.title" router-link :to="{name: 'admins'}">
+                <v-list-item v-for="item in items" :key="item.title" router-link :to="item.link">
                     <v-list-item-icon>
                         <v-icon>{{ item.icon }}</v-icon>
                     </v-list-item-icon>
@@ -35,7 +35,6 @@ export default {
     computed: {
         sidebarState: {
             get: function() {
-                console.log(this.$route.routes.admins);
                 return this.$store.getters.sidebarState;
             },
             set: function(){} 
@@ -44,8 +43,8 @@ export default {
     data () {
         return {
             items: [
-                { title: 'Admins', icon: 'mdi-view-dashboard', link: '' },
-                { title: 'Users', icon: 'mdi-image', link: ''}
+                { title: 'Admins', icon: 'mdi-view-dashboard', link: "admins" },
+                { title: 'Users', icon: 'mdi-image', link: 'users'}
             ],
         }
     }
