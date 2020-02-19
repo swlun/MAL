@@ -37,7 +37,6 @@ const moduleMyUsers = {
         snapshot.forEach(doc => {
             const data = {
                 'id': doc.id,
-                'userId': doc.data().id,
                 'name': doc.data().name,
                 'age': doc.data().age,
                 'contactNumber': doc.data().contactNumber,

@@ -16,7 +16,10 @@
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on }">
-            <v-btn color="primary" dark class="mb-2" v-on="on">New Item</v-btn>
+            <v-btn color="primary" dark class="mb-2" v-on="on">
+              <v-icon dense color="white">mdi-plus</v-icon>
+              New Users
+            </v-btn>
           </template>
           <v-card> 
             <v-card-title>
@@ -112,7 +115,6 @@ export default {
             occupation: '',
             student: false,
             teacher: false,
-            description: ''
         },
         defaultItem: {
             name: '',
@@ -127,7 +129,7 @@ export default {
 
     computed: {
         formTitle () {
-            return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+            return this.editedIndex === -1 ? 'New Users' : 'Edit Users'
         },
     },
 
@@ -143,38 +145,60 @@ export default {
 
     methods: {
         initialize () {
-            this.users = this.$store.getters.GetAllUsers;
+          this.$store.dispatch('GetAllUsers');
+          this.users = this.$store.getters.GetAllUsers;
         },
 
         editItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
-        this.editedItem = Object.assign({}, item)
-        this.dialog = true
+          this.editedIndex = this.users.indexOf(item)
+          this.editedItem = Object.assign({}, item)
+          this.dialog = true
         },
 
         deleteItem (item) {
-        const index = this.desserts.indexOf(item)
-        confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
+          var confirmation = confirm('Are you sure you want to delete this item?')
+          if(confirmation) {
+            db.collection('Users').doc(item.id).delete()
+            .then(() => {
+                this.$store.dispatch('GetAllUsers')
+                .then(() => {
+                  this.users = this.$store.getters.GetAllUsers;
+                })
+            }).catch(function(error) {
+                console.error("Error removing Users: ", error);
+            });
+          }
         },
 
         close () {
-        this.dialog = false
-        setTimeout(() => {
-            this.editedItem = Object.assign({}, this.defaultItem)
-            this.editedIndex = -1
-        }, 300)
+          this.dialog = false
+          setTimeout(() => {
+              this.editedItem = Object.assign({}, this.defaultItem)
+              this.editedIndex = -1
+          }, 300)
         },
 
         save () {
         if (this.editedIndex > -1) {
-            Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            db.collection('Users').doc(this.editedItem.id).update(this.editedItem)
+            .then(() => {
+                this.$store.dispatch('GetAllUsers')
+                .then(() => {
+                  this.users = this.$store.getters.GetAllUsers;
+                })
+            }).catch(function(error) {
+                console.error("Error updating Users: ", error);
+            });
         } else {
             db.collection('Users').add(this.editedItem)
             .then(() => {
                 this.$store.dispatch('GetAllUsers')
-                console.log(this.users);
-                console.log(this.$store.getters.GetAllUsers);
-            })
+                .then(() => {
+                  this.users = this.$store.getters.GetAllUsers;
+                })
+            }).catch(function(error) {
+                console.error("Error adding Users: ", error);
+            });
         }
         this.close()
         },

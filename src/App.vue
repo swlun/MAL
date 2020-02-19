@@ -19,9 +19,6 @@ export default {
   components: {
     NavBar,
     ToolBar
-  },
-  created() {
-    this.$store.dispatch('GetAllUsers');
   }
 }
 </script>
