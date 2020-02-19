@@ -135,7 +135,7 @@ export default {
 
     watch: {
         dialog (val) {
-        val || this.close()
+          val || this.close()
         },
     },
 
