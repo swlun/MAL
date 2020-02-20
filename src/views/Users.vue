@@ -134,6 +134,7 @@ export default {
         editDialog: false,
         userDialog: false,
         users: [],
+        currentUser: [],
         headers: [
         {
             text: 'Id',
@@ -218,8 +219,8 @@ export default {
         },
 
         ShowUserDetails(item) {
-          this.editedIndex = this.users.indexOf(item)
-          this.editedItem = Object.assign({}, item)
+          this.currentUser = Object.assign({}, item)
+          console.log(this.currentUser);
           this.userDialog = true
         },
 
