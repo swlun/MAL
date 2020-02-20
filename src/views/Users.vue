@@ -14,7 +14,41 @@
           vertical
         ></v-divider>
         <v-spacer></v-spacer>
-        <v-dialog v-model="dialog" max-width="500px">
+        
+        <!-- User Details Dialog -->
+        <v-dialog
+          v-model="userDialog"
+          width="500"
+        >
+          <v-card>
+            <v-card-title
+              class="headline grey lighten-2"
+              primary-title
+            >
+              Privacy Policy
+            </v-card-title>
+
+            <v-card-text>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </v-card-text>
+
+            <v-divider></v-divider>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="primary"
+                text
+                @click="userDialog = false"
+              >
+                I accept
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <!-- Edit or Create User Dialog -->
+        <v-dialog v-model="editDialog" max-width="500px">
           <template v-slot:activator="{ on }">
             <v-btn color="primary" dark class="mb-2" v-on="on">
               <v-icon dense color="white">mdi-plus</v-icon>
@@ -55,7 +89,7 @@
             </v-card-text>
 
             <v-card-actions>
-              <v-spacer></v-spacer>
+              <v-spacer></v-spacer> 
               <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
               <v-btn color="blue darken-1" text @click="save">Save</v-btn>
             </v-card-actions>
@@ -64,6 +98,13 @@
       </v-toolbar>
     </template>
     <template v-slot:item.action="{ item }">
+      <v-btn 
+        small
+        class="mr-2"
+        @click="ShowUserDetails(item)"
+      >
+        View
+      </v-btn>
       <v-icon
         small
         class="mr-2"
@@ -87,8 +128,11 @@
 <script>
 import db from '../scripts/firebaseInit';
 export default {
+    components: {
+    },
     data: () => ({
-        dialog: false,
+        editDialog: false,
+        userDialog: false,
         users: [],
         headers: [
         {
@@ -134,9 +178,12 @@ export default {
     },
 
     watch: {
-        dialog (val) {
+        editDialog (val) {
           val || this.close()
         },
+        userDialog (val) {
+          val || this.close()
+        }
     },
 
     created () {
@@ -152,7 +199,7 @@ export default {
         editItem (item) {
           this.editedIndex = this.users.indexOf(item)
           this.editedItem = Object.assign({}, item)
-          this.dialog = true
+          this.editDialog = true
         },
 
         deleteItem (item) {
@@ -170,8 +217,14 @@ export default {
           }
         },
 
+        ShowUserDetails(item) {
+          this.editedIndex = this.users.indexOf(item)
+          this.editedItem = Object.assign({}, item)
+          this.userDialog = true
+        },
+
         close () {
-          this.dialog = false
+          this.editDialog = false
           setTimeout(() => {
               this.editedItem = Object.assign({}, this.defaultItem)
               this.editedIndex = -1

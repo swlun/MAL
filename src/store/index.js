@@ -6,7 +6,7 @@ Vue.use(Vuex)
 // Page States
 const modulePageState = {
   state: {
-    sidebarState: true
+    sidebarState: true,
   },
   mutations: {
     ChangeSidebarState(state) {
