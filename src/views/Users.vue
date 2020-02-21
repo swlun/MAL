@@ -153,7 +153,8 @@ export default {
         editDialog: false,
         userDialog: false,
         users: [],
-        currentUser: [],
+        //currentUser: [],
+        currentUserRecords: [],
         headers: [
         {
             text: 'Id',
@@ -238,8 +239,12 @@ export default {
         },
 
         ShowUserDetails(item) {
-          this.currentUser = Object.assign({}, item)
-          console.log(this.currentUser);
+          //this.currentUser = Object.assign({}, item)
+          db.collection("UserActivities").doc(item.id).get().then((doc) => {
+            this.currentUserRecords = doc.data();
+          }).catch(function(error) {
+            console.log("Error getting document:", error);
+          });
           this.userDialog = true
         },
 
