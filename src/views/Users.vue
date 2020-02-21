@@ -97,14 +97,33 @@
         </v-dialog>
       </v-toolbar>
     </template>
-    <template v-slot:item.action="{ item }">
+    <template v-slot:item.student="{ item }">
       <v-btn 
         small
         class="mr-2"
+        v-if="item.student"
         @click="ShowUserDetails(item)"
       >
-        View
+        {{ item.student }}
       </v-btn>
+      <div v-else>
+        {{ item.student }}
+      </div>
+    </template>
+    <template v-slot:item.teacher="{ item }">
+      <v-btn 
+        small
+        class="mr-2"
+        v-if="item.teacher"
+        @click="ShowUserDetails(item)"
+      >
+        {{ item.teacher }}
+      </v-btn>
+      <div v-else>
+        {{ item.teacher }}
+      </div>
+    </template>
+    <template v-slot:item.action="{ item }">
       <v-icon
         small
         class="mr-2"
