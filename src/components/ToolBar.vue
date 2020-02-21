@@ -12,6 +12,14 @@
 <script>
 export default {
     name: 'ToolBar',
+    computed: {
+        sidebarState: {
+            get: function() {
+                return this.$store.getters.sidebarState;
+            },
+            set: function(){}
+        }
+    },
     methods: {
         ChangeSidebarState() {
             this.$store.dispatch('ChangeSidebarState');

@@ -1,6 +1,6 @@
 <template>
     <nav>
-        <v-navigation-drawer v-model="sidebarState" app hide-overlay>
+        <v-navigation-drawer v-model="sidebarState" app hide-overlay stateless>
             <v-list-item>
                 <v-list-item-content>
                     <v-list-item-title class="title">
