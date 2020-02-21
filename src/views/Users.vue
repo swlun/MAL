@@ -45,6 +45,12 @@
             </v-list-item>
             <v-divider></v-divider>
 
+            <!-- Table -->
+            <v-data-table v-if="currentDialog='teacher'" :items="currentUserRecordsDone"></v-data-table>
+            <v-data-table v-else :items="currentUserRecordsDone"></v-data-table>
+            <v-spacer></v-spacer>
+            <v-data-table v-if="currentDialog='teacher'" :items="currentUserRecordsPending"></v-data-table>
+            <v-data-table v-else :items="currentUserRecordsPending"></v-data-table>
 
             <v-divider></v-divider>
             <v-card-actions>
@@ -52,7 +58,7 @@
               <v-btn
                 color="primary"
                 text
-                @click="userDialog = false"
+                @click="userDialog = true"
               >
                 OK
               </v-btn>
@@ -115,7 +121,7 @@
         small
         class="mr-2"
         v-if="item.student"
-        @click="ShowUserDetails(item)"
+        @click="ShowUserDetails(item, 'student')"
       >
         {{ item.student }}
       </v-btn>
@@ -128,7 +134,7 @@
         small
         class="mr-2"
         v-if="item.teacher"
-        @click="ShowUserDetails(item)"
+        @click="ShowUserDetails(item, 'teacher')"
       >
         {{ item.teacher }}
       </v-btn>
@@ -165,9 +171,11 @@ export default {
     data: () => ({
         editDialog: false,
         userDialog: false,
+        currentDialog: '',
         users: [],
         currentUser: [],
-        currentUserRecords: [],
+        currentUserRecordsDone: [],
+        currentUserRecordsPending: [],
         headers: [
         {
             text: 'Id',
@@ -251,13 +259,26 @@ export default {
           }
         },
 
-        ShowUserDetails(item) {
+        ShowUserDetails(item, job) {
           this.currentUser = Object.assign({}, item)
           db.collection("UserActivities").doc(item.id).get().then((doc) => {
-            this.currentUserRecords = doc.data();
-          }).catch(function(error) {
+            if( job == 'student') {
+              this.currentUserRecordsDone = Object.keys(doc.data().student.done).map((key) => {
+                return [String[key], doc.data().student.done[key]];
+              });
+              this.currentUserRecordsPending = Object.assign({}, doc.data().student.pending);
+              console.log( this.currentUserRecordsDone)
+              console.log( this.editedItem)
+            }
+            else if (job == 'teacher') {
+              this.currentUserRecordsDone = doc.data().teacher.done;
+              this.currentUserRecordsPending = doc.data().taecher.pending;
+            }
+          })
+          .catch(function(error) {
             console.log("Error getting document:", error);
           });
+          this.currentDialog = job
           this.userDialog = true
         },
 
