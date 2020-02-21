@@ -20,20 +20,33 @@
           v-model="userDialog"
           width="500"
         >
+          <!-- title, name -->
           <v-card>
             <v-card-title
-              class="headline grey lighten-2"
+              class="headline lighten-2"
               primary-title
             >
-              Privacy Policy
+              {{ currentUser.name }}
             </v-card-title>
 
-            <v-card-text>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </v-card-text>
-
+            <!-- Details -->
+            <v-list-item three-line>
+              <v-list-item-avatar
+                tile
+                size="80"
+                color="grey"
+              ></v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-subtitle>Age: {{ currentUser.age }}</v-list-item-subtitle>
+                <v-list-item-subtitle>Location: {{ currentUser.location }}</v-list-item-subtitle>
+                <v-list-item-subtitle>Occupation: {{ currentUser.occupation}}</v-list-item-subtitle>
+                <v-list-item-subtitle>Description: {{ currentUser.description}}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
             <v-divider></v-divider>
 
+
+            <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
@@ -41,7 +54,7 @@
                 text
                 @click="userDialog = false"
               >
-                I accept
+                OK
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -153,7 +166,7 @@ export default {
         editDialog: false,
         userDialog: false,
         users: [],
-        //currentUser: [],
+        currentUser: [],
         currentUserRecords: [],
         headers: [
         {
@@ -239,7 +252,7 @@ export default {
         },
 
         ShowUserDetails(item) {
-          //this.currentUser = Object.assign({}, item)
+          this.currentUser = Object.assign({}, item)
           db.collection("UserActivities").doc(item.id).get().then((doc) => {
             this.currentUserRecords = doc.data();
           }).catch(function(error) {
